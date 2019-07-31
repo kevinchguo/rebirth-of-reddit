@@ -1,5 +1,3 @@
-var moment = require("moment");
-
 let subredditArray = [
   [
     "https://www.reddit.com/r/tifu.json",
@@ -18,7 +16,7 @@ let subredditArray = [
 
 //log down which subreddit was clicked
 let currentSubreddit;
-
+let redditJSONLimitAfter;
 //current date in seconds
 var date = new Date().getTime() / 1000;
 
@@ -39,16 +37,32 @@ for (let i = 1; i < findButtons.length; i++) {
   }
 }
 
+//Scroll down load
+setTimeout(window.addEventListener("scroll", loadMore), 1000);
+
+function loadMore() {
+  if (window.scrollY + window.innerHeight >= document.body.offsetHeight) {
+    const subreddits = new XMLHttpRequest();
+    console.log(currentSubreddit + "?limit=10&after=" + redditJSONLimitAfter);
+    subreddits.open(
+      "GET",
+      currentSubreddit + "?limit=10&after=" + redditJSONLimitAfter
+    );
+    subreddits.send();
+    subreddits.addEventListener("load", loadData);
+  }
+}
+
 //Populate random posts
 function generateRandom() {
   postArea.innerHTML = "";
-  let subredditsOnScroll = new XMLHttpRequest();
-  subredditsOnScroll.open(
+  let randomSubreddits = new XMLHttpRequest();
+  randomSubreddits.open(
     "GET",
     subredditArray[0][Math.floor(Math.random() * subredditArray[0].length)]
   );
-  subredditsOnScroll.send();
-  subredditsOnScroll.addEventListener("load", loadData);
+  randomSubreddits.send();
+  randomSubreddits.addEventListener("load", loadData);
 }
 generateRandom();
 
@@ -57,12 +71,12 @@ findButtons[0].addEventListener("click", generateRandom);
 
 //Populates reddit posts
 function loadData() {
+  console.log(this);
   let subredditData = JSON.parse(this.responseText).data.children;
-  console.log(subredditData);
   currentSubreddit =
     "https://www.reddit.com/" + subredditData[0].data.subreddit + ".json";
-  console.log(currentSubreddit);
-
+  redditJSONLimitAfter = JSON.parse(this.responseText).data.after;
+  console.log(currentSubreddit, redditJSONLimitAfter);
   //Generate subreddit posts
   for (let j = 0; j < subredditData.length; j++) {
     let subredditPostData = subredditData[j].data;
@@ -156,35 +170,15 @@ function loadData() {
     let titleDiv = document.createElement("div");
     titleDiv.id = "titlebox";
     createPosts.appendChild(titleDiv);
-    let createTitle = document.createElement("div");
+    let createTitle = document.createElement("a");
     createTitle.className = "title";
     createTitle.innerHTML = subredditPostData.title;
     titleDiv.appendChild(createTitle);
-
-    //Info of posts
-    let createInfo = document.createElement("div");
-    createInfo.id = "info";
-    createPosts.append(createInfo);
-
-    //Author of post
-    let createAuthor = document.createElement("div");
-    createAuthor.className = "author";
-    createAuthor.innerHTML = "Posted by u/" + subredditPostData.author;
-    createInfo.appendChild(createAuthor);
-
-    //Subreddit of post
-    let createSubreddit = document.createElement("div");
-    createSubreddit.className = "subreddit";
-    createSubreddit.innerHTML =
-      "from " + subredditPostData.subreddit_name_prefixed;
-    createInfo.appendChild(createSubreddit);
-
-    //Time of post
-    let createTimePosted = document.createElement("div");
-    createTimePosted.className = "timePosted";
-    let postedWhen = moment(subredditPostData.created).fromNow();
-    createTimePosted.innerHTML = postedWhen;
-    createInfo.appendChild(createTimePosted);
+    createTitle.setAttribute(
+      "href",
+      "https://www.reddit.com/" + subredditPostData.permalink
+    );
+    createTitle.target = "_blank";
 
     //Up/down votes of post
     let createVotes = document.createElement("div");
@@ -200,25 +194,50 @@ function loadData() {
     createDownvote.className = "far fa-thumbs-down";
     let createUpvoteCounter = document.createElement("div");
     createUpvoteCounter.innerHTML = subredditPostData.ups;
-    let createDownvoteCounter = document.createElement("div");
-    createDownvoteCounter.innerHTML = subredditPostData.downs;
+
     createVotes.appendChild(createUpbutton);
     createUpbutton.appendChild(createUpvote);
     createVotes.appendChild(createUpvoteCounter);
     createVotes.appendChild(createDownbutton);
     createDownbutton.appendChild(createDownvote);
-    createVotes.appendChild(createDownvoteCounter);
+
+    //Info of posts
+    let createInfo = document.createElement("div");
+    createInfo.id = "info";
+    createPosts.append(createInfo);
+
+    //Subreddit of post
+    let createSubreddit = document.createElement("a");
+    createSubreddit.className = "subreddit";
+    createSubreddit.innerHTML = subredditPostData.subreddit_name_prefixed;
+    createInfo.appendChild(createSubreddit);
+    createSubreddit.setAttribute(
+      "href",
+      "https://www.reddit.com/r/" + subredditPostData.subreddit
+    );
+    createSubreddit.target = "_blank";
+
+    //Author of post
+    let createAuthor = document.createElement("a");
+    createAuthor.className = "author";
+    createAuthor.innerHTML = subredditPostData.author;
+    createInfo.appendChild(createAuthor);
+    createAuthor.setAttribute(
+      "href",
+      "https://www.reddit.com/user/" + subredditPostData.author
+    );
+    createAuthor.target = "_blank";
+
+    //Time of post
+    let createTimePosted = document.createElement("div");
+    createTimePosted.className = "timePosted";
+    let postedWhen = moment(
+      Math.abs(Math.floor(date - subredditPostData.created))
+    ).fromNow();
+
+    createTimePosted.innerHTML = postedWhen;
+    createInfo.appendChild(createTimePosted);
 
     //Short description of post
-  }
-}
-setTimeout(window.addEventListener("scroll", loadMore), 1000);
-
-function loadMore() {
-  if (window.scrollY + window.innerHeight >= document.body.offsetHeight) {
-    let subreddits = new XMLHttpRequest();
-    subreddits.open("GET", currentSubreddit + "?limit=10&after=");
-    subreddits.send();
-    subreddits.addEventListener("load", loadData);
   }
 }
