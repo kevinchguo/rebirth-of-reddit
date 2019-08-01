@@ -44,12 +44,12 @@ function loadMore() {
   if (window.scrollY + window.innerHeight >= document.body.offsetHeight) {
     const subreddits = new XMLHttpRequest();
     console.log(currentSubreddit + "?limit=10&after=" + redditJSONLimitAfter);
+    subreddits.addEventListener("load", loadData);
     subreddits.open(
       "GET",
       currentSubreddit + "?limit=10&after=" + redditJSONLimitAfter
     );
     subreddits.send();
-    subreddits.addEventListener("load", loadData);
   }
 }
 
@@ -74,7 +74,7 @@ function loadData() {
   console.log(this);
   let subredditData = JSON.parse(this.responseText).data.children;
   currentSubreddit =
-    "https://www.reddit.com/" + subredditData[0].data.subreddit + ".json";
+    "https://www.reddit.com/r/" + subredditData[0].data.subreddit + ".json";
   redditJSONLimitAfter = JSON.parse(this.responseText).data.after;
   console.log(currentSubreddit, redditJSONLimitAfter);
   //Generate subreddit posts
@@ -91,7 +91,8 @@ function loadData() {
     createPosts.appendChild(picBox);
     let subredditPics;
     if (!subredditPostData.preview) {
-      subredditPics = "https://placekitten.com/g/300/300";
+      subredditPics =
+        "https://i.kym-cdn.com/photos/images/original/001/337/786/426.png";
     } else {
       if (!subredditPostData.preview.images[0].resolutions[1]) {
         subredditPics = subredditPostData.preview.images[0].resolutions[0].url.replace(
@@ -239,5 +240,35 @@ function loadData() {
     createInfo.appendChild(createTimePosted);
 
     //Short description of post
+    let selfTextBox = document.createElement("div");
+    selfTextBox.className = "descriptionBox";
+    let selfTextDiv = document.createElement("div");
+    selfTextDiv.className = "selftext";
+    selfTextDiv.innerHTML = subredditPostData.selftext;
+    createPosts.appendChild(selfTextBox);
+    selfTextBox.appendChild(selfTextDiv);
   }
+}
+
+//To top button
+window.onscroll = function() {
+  scrollToTop();
+};
+
+function scrollToTop() {
+  if (
+    document.body.scrollTop > 130 ||
+    document.documentElement.scrollTop > 130
+  ) {
+    document.getElementById("topBtn").style.display = "block";
+  } else {
+    document.getElementById("topBtn").style.display = "none";
+  }
+}
+
+let topBtn = document.getElementById("topBtn");
+topBtn.addEventListener("click", topFunction);
+function topFunction() {
+  document.body.scrollTop = 0; // For Safari
+  document.documentElement.scrollTop = 0; // For Chrome, Firefox, IE and Opera
 }

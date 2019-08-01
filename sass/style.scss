@@ -58,7 +58,7 @@ button:hover {
   background-color: White;
   margin: 10px;
   width: 330px;
-  height: 415px;
+  height: 450px;
   border: 7px solid white;
   padding: 20px;
 }
@@ -80,22 +80,51 @@ button:hover {
 #titleBox {
   display: flex;
   width: $redditPostWidth;
-  height: 100px;
+  height: 75px;
   width: $redditPostWidth;
 }
-.title {
-  text-align: left;
-  font-size: 20px;
-  // text-overflow: ellipsis;
+
+@mixin multiLineEllipsis($lineHeight: 1.2em, $lineCount: 1, $bgColor: white) {
   overflow: hidden;
-  // white-space: nowrap;
-  width: $redditPostWidth;
-  height: 75px;
+  position: relative;
+  line-height: $lineHeight;
+  max-height: $lineHeight * $lineCount;
+  text-align: justify;
+  margin-right: -1em;
+  padding-right: 1em;
+  &:before {
+    content: "...";
+    position: absolute;
+    right: 0;
+    bottom: 0;
+  }
+  &:after {
+    content: "";
+    position: absolute;
+    right: 0;
+    width: 1em;
+    height: 1em;
+    margin-top: 0.2em;
+    background: $bgColor;
+  }
+}
+
+.title {
+  @include multiLineEllipsis(
+    $lineHeight: 1.2em,
+    $lineCount: 3,
+    $bgColor: white
+  );
 }
 
 #votes {
-  bottom: 0;
   display: flex;
+  height: 1em;
+  width: 50px;
+  margin-top: 5px;
+  margin-bottom: 5px;
+}
+#votes button {
 }
 
 #info {
@@ -103,10 +132,11 @@ button:hover {
   width: $redditPostWidth;
   font-size: 10px;
   color: #808080;
+  margin-top: 5px;
+  margin-bottom: 5px;
 }
 
 .subreddit {
-  margin-right: 5px;
 }
 
 .author::before {
