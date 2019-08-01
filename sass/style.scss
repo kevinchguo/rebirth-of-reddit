@@ -52,13 +52,14 @@ button:hover {
   margin-left: auto;
   margin-right: auto;
   width: 900px;
+  justify-content: center;
 }
 
 .redditPosts {
   background-color: White;
   margin: 10px;
   width: 330px;
-  height: 450px;
+  height: 455px;
   border: 7px solid white;
   padding: 20px;
 }
@@ -84,47 +85,12 @@ button:hover {
   width: $redditPostWidth;
 }
 
-@mixin multiLineEllipsis($lineHeight: 1.2em, $lineCount: 1, $bgColor: white) {
-  overflow: hidden;
-  position: relative;
-  line-height: $lineHeight;
-  max-height: $lineHeight * $lineCount;
-  text-align: justify;
-  margin-right: -1em;
-  padding-right: 1em;
-  &:before {
-    content: "...";
-    position: absolute;
-    right: 0;
-    bottom: 0;
-  }
-  &:after {
-    content: "";
-    position: absolute;
-    right: 0;
-    width: 1em;
-    height: 1em;
-    margin-top: 0.2em;
-    background: $bgColor;
-  }
-}
-
-.title {
-  @include multiLineEllipsis(
-    $lineHeight: 1.2em,
-    $lineCount: 3,
-    $bgColor: white
-  );
-}
-
 #votes {
   display: flex;
   height: 1em;
   width: 50px;
   margin-top: 5px;
   margin-bottom: 5px;
-}
-#votes button {
 }
 
 #info {
@@ -136,15 +102,21 @@ button:hover {
   margin-bottom: 5px;
 }
 
-.subreddit {
-}
-
 .author::before {
   content: "from u/";
 }
 
 .author {
   margin-right: 5px;
+}
+
+.descriptionBox {
+  overflow: auto;
+  height: 55px;
+}
+
+.selftext {
+  height: 50px;
 }
 
 #footer {
