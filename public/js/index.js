@@ -43,7 +43,6 @@ setTimeout(window.addEventListener("scroll", loadMore), 1000);
 function loadMore() {
   if (window.scrollY + window.innerHeight >= document.body.offsetHeight) {
     const subreddits = new XMLHttpRequest();
-    console.log(currentSubreddit + "?limit=10&after=" + redditJSONLimitAfter);
     subreddits.addEventListener("load", loadData);
     subreddits.open(
       "GET",
@@ -71,12 +70,11 @@ findButtons[0].addEventListener("click", generateRandom);
 
 //Populates reddit posts
 function loadData() {
-  console.log(this);
   let subredditData = JSON.parse(this.responseText).data.children;
+  //Logs down for my loadMore function
   currentSubreddit =
     "https://www.reddit.com/r/" + subredditData[0].data.subreddit + ".json";
   redditJSONLimitAfter = JSON.parse(this.responseText).data.after;
-  console.log(currentSubreddit, redditJSONLimitAfter);
   //Generate subreddit posts
   for (let j = 0; j < subredditData.length; j++) {
     let subredditPostData = subredditData[j].data;
@@ -173,7 +171,11 @@ function loadData() {
     createPosts.appendChild(titleDiv);
     let createTitle = document.createElement("a");
     createTitle.className = "title";
-    createTitle.innerHTML = subredditPostData.title;
+    if (subredditPostData.title.length < 81) {
+      createTitle.innerHTML = subredditPostData.title;
+    } else {
+      createTitle.innerHTML = subredditPostData.title.substring(0, 80) + "...";
+    }
     titleDiv.appendChild(createTitle);
     createTitle.setAttribute(
       "href",
@@ -232,9 +234,7 @@ function loadData() {
     //Time of post
     let createTimePosted = document.createElement("div");
     createTimePosted.className = "timePosted";
-    let postedWhen = moment(
-      Math.abs(Math.floor(date - subredditPostData.created))
-    ).fromNow();
+    let postedWhen = moment(subredditPostData.created * 1000).fromNow();
 
     createTimePosted.innerHTML = postedWhen;
     createInfo.appendChild(createTimePosted);
