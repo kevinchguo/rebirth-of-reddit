@@ -52,8 +52,8 @@ function loadMore() {
   }
 }
 
-//Populate random posts
-function generateRandom() {
+//Random button
+findButtons[0].addEventListener("click", function () {
   postArea.innerHTML = "";
   let randomSubreddits = new XMLHttpRequest();
   randomSubreddits.open(
@@ -62,11 +62,7 @@ function generateRandom() {
   );
   randomSubreddits.send();
   randomSubreddits.addEventListener("load", loadData);
-}
-generateRandom();
-
-//Random button
-findButtons[0].addEventListener("click", generateRandom);
+});
 
 //Populates reddit posts
 function loadData() {
@@ -90,7 +86,7 @@ function loadData() {
     let subredditPics;
     if (!subredditPostData.preview) {
       subredditPics =
-        "https://i.kym-cdn.com/photos/images/original/001/337/786/426.png";
+        "https://placekitten.com/g/300/300";
     } else {
       if (!subredditPostData.preview.images[0].resolutions[1]) {
         subredditPics = subredditPostData.preview.images[0].resolutions[0].url.replace(
@@ -251,7 +247,7 @@ function loadData() {
 }
 
 //To top button
-window.onscroll = function() {
+window.onscroll = function () {
   scrollToTop();
 };
 
