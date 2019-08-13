@@ -1,0 +1,145 @@
+$redditPostWidth: 330px;
+
+body {
+  background-image: url("../assets/bg.jpg");
+  margin: 0;
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+#titleLogo {
+  background-image: url("../assets/header_bg.svg");
+  background-color: white;
+  background-repeat: no-repeat;
+  background-position: center;
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  height: 80px;
+}
+
+#navbar {
+  background-color: #3a3a3c;
+  width: 100%;
+  height: 50px;
+  display: flex;
+  justify-content: center;
+  z-index: 9998;
+}
+
+button:focus {
+  outline: 0;
+}
+
+button {
+  background: none;
+  border: none;
+  color: #818285;
+  font-size: 14pt;
+}
+
+button:hover {
+  color: tomato;
+}
+
+#postArea {
+  display: flex;
+  flex-wrap: wrap;
+  margin-left: auto;
+  margin-right: auto;
+  width: 900px;
+  justify-content: center;
+}
+
+.redditPosts {
+  background-color: White;
+  margin: 10px;
+  width: 330px;
+  height: 455px;
+  border: 7px solid white;
+  padding: 20px;
+}
+
+.redditPosts:hover {
+  border: 7px solid orange;
+}
+
+.picBox {
+  height: 320px;
+  width: $redditPostWidth;
+}
+
+.redditPosts img {
+  width: $redditPostWidth;
+  height: 300px;
+}
+
+#titleBox {
+  display: flex;
+  width: $redditPostWidth;
+  height: 75px;
+  width: $redditPostWidth;
+}
+
+#votes {
+  display: flex;
+  height: 1em;
+  width: 50px;
+  margin-top: 5px;
+  margin-bottom: 5px;
+}
+
+#info {
+  display: flex;
+  width: $redditPostWidth;
+  font-size: 10px;
+  color: #808080;
+  margin-top: 5px;
+  margin-bottom: 5px;
+}
+
+.author::before {
+  content: "from u/";
+}
+
+.author {
+  margin-right: 5px;
+}
+
+.descriptionBox {
+  overflow: auto;
+  height: 55px;
+}
+
+.selftext {
+  height: 50px;
+}
+
+#footer {
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  background-color: #3a3a3c;
+  text-align: center;
+  height: 50px;
+  z-index: 9999;
+}
+
+#footer img:hover:nth-child(1) {
+  content: url("../assets/facebook_orange.svg");
+}
+
+#footer img:hover:nth-child(2) {
+  content: url("../assets/instagram_orange.svg");
+}
+
+@media only screen and (max-width: 600px) {
+  #postArea {
+    width: 350px;
+  }
+}

@@ -1,0 +1,29 @@
+{
+  "name": "rebirth-of-reddit",
+  "version": "0.0.1",
+  "description": "Reddit copy",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kevinchguo/rebirth-of-reddit.git"
+  },
+  "keywords": [
+    "reddit"
+  ],
+  "author": "Kevin Guo",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/kevinchguo/rebirth-of-reddit/issues"
+  },
+  "homepage": "https://github.com/kevinchguo/rebirth-of-reddit#readme",
+  "dependencies": {
+    "gulp": "^4.0.2",
+    "gulp-sass": "^4.0.2",
+    "gulp-watch": "^5.0.1",
+    "moment": "^2.24.0",
+    "requirejs": "^2.3.6"
+  }
+}
